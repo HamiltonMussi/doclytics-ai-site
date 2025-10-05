@@ -6,14 +6,17 @@ import { useInteractions } from "@/hooks/useInteractions";
 import { useUploadDocument } from "@/hooks/useUploadDocument";
 import { useAskQuestion } from "@/hooks/useAskQuestion";
 import { Document } from "@/types/document";
+import { useRouter } from "next/router";
 
 const ChatPage = () => {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
+  const router = useRouter();
   const { data: documents = [] } = useDocuments();
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
   const { data: interactions = [] } = useInteractions(selectedDocument?.id || null);
   const uploadDocument = useUploadDocument();
   const askQuestion = useAskQuestion(selectedDocument?.id || "");
+  const [showUserMenu, setShowUserMenu] = useState(false);
   const [question, setQuestion] = useState("");
 
   const handleFileUpload = async (file: File) => {
@@ -79,8 +82,36 @@ const ChatPage = () => {
           </div>
         </div>
 
-        <div className="p-4 border-t border-gray-700">
-          <p className="text-sm truncate">{user?.name}</p>
+        <div className="relative p-4 border-t border-gray-700">
+          <button
+            onClick={() => setShowUserMenu(!showUserMenu)}
+            className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-800 transition-colors"
+          >
+            <p className="text-sm truncate">{user?.name}</p>
+          </button>
+
+          {showUserMenu && (
+            <div className="absolute bottom-full left-4 right-4 mb-2 bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+              <button
+                onClick={() => {
+                  setShowUserMenu(false);
+                  router.push("/profile");
+                }}
+                className="w-full text-left px-4 py-3 text-sm hover:bg-gray-700 transition-colors"
+              >
+                Editar perfil
+              </button>
+              <button
+                onClick={() => {
+                  setShowUserMenu(false);
+                  signOut();
+                }}
+                className="w-full text-left px-4 py-3 text-sm hover:bg-gray-700 transition-colors text-red-400"
+              >
+                Sair
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
