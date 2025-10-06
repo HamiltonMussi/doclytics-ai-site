@@ -5,23 +5,33 @@ import { useDocuments } from "@/hooks/useDocuments";
 import { useInteractions } from "@/hooks/useInteractions";
 import { useUploadDocument } from "@/hooks/useUploadDocument";
 import { useAskQuestion } from "@/hooks/useAskQuestion";
-import { Document } from "@/types/document";
+import { useDocumentPolling } from "@/hooks/useDocumentPolling";
+import { OcrStatus } from "@/types/document";
 import { useRouter } from "next/router";
 
 const ChatPage = () => {
   const { user, signOut } = useAuth();
   const router = useRouter();
   const { data: documents = [] } = useDocuments();
-  const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
+  const [selectedDocumentId, setSelectedDocumentId] = useState<string | null>(null);
+  const selectedDocument = documents.find((doc) => doc.id === selectedDocumentId) || null;
   const { data: interactions = [] } = useInteractions(selectedDocument?.id || null);
   const uploadDocument = useUploadDocument();
   const askQuestion = useAskQuestion(selectedDocument?.id || "");
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [question, setQuestion] = useState("");
 
+  useDocumentPolling(
+    selectedDocument?.ocrStatus === OcrStatus.PENDING ||
+      selectedDocument?.ocrStatus === OcrStatus.PROCESSING
+      ? selectedDocument.id
+      : null
+  );
+
   const handleFileUpload = async (file: File) => {
     try {
-      await uploadDocument.mutateAsync(file);
+      const newDocument = await uploadDocument.mutateAsync(file);
+      setSelectedDocumentId(newDocument.id);
     } catch (error: any) {
       alert(error.response?.data?.message || "Erro ao fazer upload");
     }
@@ -69,7 +79,7 @@ const ChatPage = () => {
             {documents.map((doc) => (
               <button
                 key={doc.id}
-                onClick={() => setSelectedDocument(doc)}
+                onClick={() => setSelectedDocumentId(doc.id)}
                 className={`w-full text-left px-3 py-2 rounded-lg text-sm truncate transition-colors ${
                   selectedDocument?.id === doc.id
                     ? "bg-gray-700"
@@ -120,7 +130,24 @@ const ChatPage = () => {
           <>
             <div className="border-b p-4 bg-white">
               <h2 className="text-lg font-semibold">{selectedDocument.fileName}</h2>
-              {selectedDocument.summary && (
+              {selectedDocument.ocrStatus === OcrStatus.PENDING && (
+                <div className="flex items-center gap-2 mt-2">
+                  <div className="animate-spin h-4 w-4 border-2 border-blue-600 border-t-transparent rounded-full"></div>
+                  <p className="text-sm text-gray-600">Aguardando processamento...</p>
+                </div>
+              )}
+              {selectedDocument.ocrStatus === OcrStatus.PROCESSING && (
+                <div className="flex items-center gap-2 mt-2">
+                  <div className="animate-spin h-4 w-4 border-2 border-blue-600 border-t-transparent rounded-full"></div>
+                  <p className="text-sm text-gray-600">Analisando documento...</p>
+                </div>
+              )}
+              {selectedDocument.ocrStatus === OcrStatus.FAILED && (
+                <p className="text-sm text-red-600 mt-2">
+                  Erro ao processar documento
+                </p>
+              )}
+              {selectedDocument.ocrStatus === OcrStatus.COMPLETED && selectedDocument.summary && (
                 <p className="text-sm text-gray-600 mt-1">
                   {selectedDocument.summary}
                 </p>
@@ -151,13 +178,24 @@ const ChatPage = () => {
                   value={question}
                   onChange={(e) => setQuestion(e.target.value)}
                   onKeyPress={(e) => e.key === "Enter" && handleAskQuestion()}
-                  placeholder="Faça uma pergunta sobre o documento..."
+                  placeholder={
+                    selectedDocument.ocrStatus === OcrStatus.COMPLETED
+                      ? "Faça uma pergunta sobre o documento..."
+                      : "Aguarde o processamento do documento..."
+                  }
                   className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  disabled={askQuestion.isLoading}
+                  disabled={
+                    askQuestion.isLoading ||
+                    selectedDocument.ocrStatus !== OcrStatus.COMPLETED
+                  }
                 />
                 <button
                   onClick={handleAskQuestion}
-                  disabled={askQuestion.isLoading || !question.trim()}
+                  disabled={
+                    askQuestion.isLoading ||
+                    !question.trim() ||
+                    selectedDocument.ocrStatus !== OcrStatus.COMPLETED
+                  }
                   className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {askQuestion.isLoading ? "..." : "Enviar"}

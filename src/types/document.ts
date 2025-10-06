@@ -1,3 +1,10 @@
+export enum OcrStatus {
+  PENDING = "PENDING",
+  PROCESSING = "PROCESSING",
+  COMPLETED = "COMPLETED",
+  FAILED = "FAILED",
+}
+
 export type Document = {
   id: string;
   userId: string;
@@ -5,7 +12,7 @@ export type Document = {
   fileUrl: string;
   extractedText: string | null;
   summary: string | null;
-  status: "pending" | "processing" | "completed" | "failed";
+  ocrStatus: OcrStatus;
   createdAt: string;
   updatedAt: string;
 };
