@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signOut = () => {
     destroyCookie(undefined, "doclytics.token");
     setUser(null);
-    router.push("/login");
+    router.push("/");
   };
 
   const updateUser = (userData: Partial<User>) => {

@@ -19,7 +19,7 @@ export const WithAuth = ({ children }: WithAuthProps) => {
   }
 
   if (!user) {
-    router.push("/login");
+    router.push("/");
     return (
       <div className="min-h-screen flex items-center justify-center">
         <p>Redirecionando...</p>
