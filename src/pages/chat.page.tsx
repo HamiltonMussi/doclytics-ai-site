@@ -19,6 +19,8 @@ import {
   TrashIcon,
   DocumentTextIcon,
   SparklesIcon,
+  Bars3Icon,
+  XMarkIcon,
 } from "@heroicons/react/24/outline";
 
 const ChatPage = () => {
@@ -34,6 +36,7 @@ const ChatPage = () => {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showDocMenu, setShowDocMenu] = useState<string | null>(null);
   const [question, setQuestion] = useState("");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useDocumentPolling(
     selectedDocument?.ocrStatus === OcrStatus.PENDING ||
@@ -77,13 +80,31 @@ const ChatPage = () => {
   };
 
   return (
-    <div className="flex h-screen bg-[#EAFBFF]">
-      <div className="w-72 bg-[#263743] text-white flex flex-col shadow-xl">
-        <div className="p-6 border-b border-[#456478]">
+    <div className="flex h-screen bg-[#EAFBFF] relative">
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      <div className={`
+        fixed lg:static inset-y-0 left-0 z-50
+        w-72 bg-[#263743] text-white flex flex-col shadow-xl
+        transform transition-transform duration-300 ease-in-out
+        ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+      `}>
+        <div className="p-6 border-b border-[#456478] flex items-center justify-between">
           <div className="flex items-center gap-2">
             <SparklesIcon className="w-7 h-7 text-[#B1EC04]" />
             <h1 className="text-2xl font-bold text-white">Doclytics</h1>
           </div>
+          <button
+            onClick={() => setIsSidebarOpen(false)}
+            className="lg:hidden text-white p-1 hover:bg-[#456478] rounded-lg transition-colors"
+          >
+            <XMarkIcon className="w-6 h-6" />
+          </button>
         </div>
 
         <div className="p-4">
@@ -182,6 +203,19 @@ const ChatPage = () => {
       </div>
 
       <div className="flex-1 flex flex-col">
+        <div className="lg:hidden bg-[#263743] p-4 flex items-center gap-3 shadow-md">
+          <button
+            onClick={() => setIsSidebarOpen(true)}
+            className="text-white p-2 hover:bg-[#456478] rounded-lg transition-colors"
+          >
+            <Bars3Icon className="w-6 h-6" />
+          </button>
+          <div className="flex items-center gap-2">
+            <SparklesIcon className="w-6 h-6 text-[#B1EC04]" />
+            <h1 className="text-xl font-bold text-white">Doclytics</h1>
+          </div>
+        </div>
+
         {selectedDocument ? (
           <>
             <div className="border-b border-[#88A0B0]/30 p-6 bg-white shadow-sm">
