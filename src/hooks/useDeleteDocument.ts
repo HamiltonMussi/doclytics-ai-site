@@ -9,8 +9,11 @@ export const useDeleteDocument = () => {
       await api.delete(`/documents/${documentId}`);
     },
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries("documents");
+      onSuccess: (_data, documentId) => {
+        queryClient.setQueryData("documents", (old: any) => {
+          if (!old) return [];
+          return old.filter((doc: any) => doc.id !== documentId);
+        });
       },
     },
   );
