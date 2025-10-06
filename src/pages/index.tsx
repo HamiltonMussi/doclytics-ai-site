@@ -4,6 +4,7 @@ import { z } from "zod";
 import { useAuth } from "@/contexts/AuthContext";
 import { useState } from "react";
 import Link from "next/link";
+import Head from "next/head";
 import { SparklesIcon, EnvelopeIcon, LockClosedIcon } from "@heroicons/react/24/outline";
 
 const loginSchema = z.object({
@@ -39,7 +40,11 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#EAFBFF] px-4 lg:px-0">
+    <>
+      <Head>
+        <title>Login - Doclytics</title>
+      </Head>
+      <div className="min-h-screen flex items-center justify-center bg-[#EAFBFF] px-4 lg:px-0">
       <div className="w-full max-w-6xl lg:grid lg:grid-cols-2 lg:gap-16 lg:items-center">
         <div className="max-w-md w-full mx-auto">
           <div className="bg-white rounded-2xl shadow-2xl border border-[#88A0B0]/20 p-8">
@@ -135,6 +140,7 @@ const Home = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

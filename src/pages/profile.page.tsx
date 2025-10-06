@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { api } from "@/services/api";
 import { useRouter } from "next/router";
+import Head from "next/head";
 import { ArrowLeftIcon, UserIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
 
 const profileSchema = z.object({
@@ -55,7 +56,11 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#EAFBFF] py-12 px-4">
+    <>
+      <Head>
+        <title>Perfil - Doclytics</title>
+      </Head>
+      <div className="min-h-screen bg-[#EAFBFF] py-12 px-4">
       <div className="max-w-2xl mx-auto">
         <button
           onClick={() => router.push("/chat")}
@@ -139,6 +144,7 @@ const ProfilePage = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

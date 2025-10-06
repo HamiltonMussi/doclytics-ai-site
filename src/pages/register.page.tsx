@@ -4,6 +4,7 @@ import { z } from "zod";
 import { useAuth } from "@/contexts/AuthContext";
 import { useState } from "react";
 import Link from "next/link";
+import Head from "next/head";
 import { SparklesIcon, EnvelopeIcon, LockClosedIcon, UserIcon } from "@heroicons/react/24/outline";
 
 const registerSchema = z.object({
@@ -40,7 +41,11 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#EAFBFF] px-4">
+    <>
+      <Head>
+        <title>Cadastro - Doclytics</title>
+      </Head>
+      <div className="min-h-screen flex items-center justify-center bg-[#EAFBFF] px-4">
       <div className="max-w-md w-full">
         <div className="bg-white rounded-2xl shadow-2xl border border-[#88A0B0]/20 p-8">
           <div className="text-center mb-8">
@@ -143,6 +148,7 @@ const Register = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

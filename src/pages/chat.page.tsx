@@ -11,6 +11,7 @@ import { useClearInteractions } from "@/hooks/useClearInteractions";
 import { useDownloadDocument } from "@/hooks/useDownloadDocument";
 import { OcrStatus } from "@/types/document";
 import { useRouter } from "next/router";
+import Head from "next/head";
 import ReactMarkdown from "react-markdown";
 import {
   PlusIcon,
@@ -109,7 +110,11 @@ const ChatPage = () => {
   };
 
   return (
-    <div className="fixed inset-0 flex bg-[#EAFBFF] overflow-x-hidden">
+    <>
+      <Head>
+        <title>Chat - Doclytics</title>
+      </Head>
+      <div className="fixed inset-0 flex bg-[#EAFBFF] overflow-x-hidden">
       {isSidebarOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-40 lg:hidden"
@@ -380,6 +385,7 @@ const ChatPage = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 
