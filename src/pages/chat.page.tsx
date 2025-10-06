@@ -20,6 +20,7 @@ import { ChatMessages } from "@/components/ChatMessages";
 import { ChatInput } from "@/components/ChatInput";
 import { EmptyState } from "@/components/EmptyState";
 import { ConfirmModal } from "@/components/ConfirmModal";
+import { Spinner } from "@/components/Spinner";
 
 const ChatPage = () => {
   const { user, signOut } = useAuth();
@@ -30,9 +31,8 @@ const ChatPage = () => {
   );
   const selectedDocument =
     documents.find((doc) => doc.id === selectedDocumentId) || null;
-  const { data: interactions = [] } = useInteractions(
-    selectedDocument?.id || null,
-  );
+  const { data: interactions = [], isLoading: isLoadingInteractions } =
+    useInteractions(selectedDocument?.id || null);
   const uploadDocument = useUploadDocument();
   const deleteDocument = useDeleteDocument();
   const askQuestion = useAskQuestion(selectedDocument?.id || "");
@@ -187,15 +187,28 @@ const ChatPage = () => {
                 hasInteractions={interactions.length > 0}
               />
 
-              <ChatMessages interactions={interactions} />
+              {isLoadingInteractions ? (
+                <div className="flex-1 flex items-center justify-center">
+                  <div className="flex flex-col items-center gap-3">
+                    <Spinner className="h-8 w-8" />
+                    <p className="text-[#456478] text-sm">
+                      Carregando documento...
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <ChatMessages interactions={interactions} />
 
-              <ChatInput
-                value={question}
-                onChange={setQuestion}
-                onSubmit={handleAskQuestion}
-                isLoading={askQuestion.isLoading}
-                ocrStatus={selectedDocument.ocrStatus}
-              />
+                  <ChatInput
+                    value={question}
+                    onChange={setQuestion}
+                    onSubmit={handleAskQuestion}
+                    isLoading={askQuestion.isLoading}
+                    ocrStatus={selectedDocument.ocrStatus}
+                  />
+                </>
+              )}
             </>
           ) : (
             <EmptyState userName={user?.name} />
@@ -211,6 +224,7 @@ const ChatPage = () => {
         onCancel={() => setConfirmDelete({ isOpen: false, docId: null })}
         confirmText="Apagar"
         cancelText="Cancelar"
+        isLoading={deleteDocument.isLoading}
       />
 
       <ConfirmModal
@@ -221,6 +235,7 @@ const ChatPage = () => {
         onCancel={() => setConfirmClear(false)}
         confirmText="Limpar"
         cancelText="Cancelar"
+        isLoading={clearInteractions.isLoading}
       />
     </>
   );
