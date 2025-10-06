@@ -12,12 +12,14 @@ import { useDownloadDocument } from "@/hooks/useDownloadDocument";
 import { OcrStatus } from "@/types/document";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import { toast } from "react-toastify";
 import { Sidebar } from "@/components/Sidebar";
 import { MobileHeader } from "@/components/MobileHeader";
 import { DocumentHeader } from "@/components/DocumentHeader";
 import { ChatMessages } from "@/components/ChatMessages";
 import { ChatInput } from "@/components/ChatInput";
 import { EmptyState } from "@/components/EmptyState";
+import { ConfirmModal } from "@/components/ConfirmModal";
 
 const ChatPage = () => {
   const { user, signOut } = useAuth();
@@ -35,6 +37,11 @@ const ChatPage = () => {
   const [showDocMenu, setShowDocMenu] = useState<string | null>(null);
   const [question, setQuestion] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState<{ isOpen: boolean; docId: string | null }>({
+    isOpen: false,
+    docId: null,
+  });
+  const [confirmClear, setConfirmClear] = useState(false);
 
   useDocumentPolling(
     selectedDocument?.ocrStatus === OcrStatus.PENDING ||
@@ -48,12 +55,12 @@ const ChatPage = () => {
     const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
 
     if (file.size > MAX_FILE_SIZE) {
-      alert("O arquivo deve ter no máximo 10MB");
+      toast.error("O arquivo deve ter no máximo 10MB");
       return;
     }
 
     if (!ALLOWED_TYPES.includes(file.type)) {
-      alert("Apenas arquivos JPG, PNG e PDF são permitidos");
+      toast.error("Apenas arquivos JPG, PNG e PDF são permitidos");
       return;
     }
 
@@ -61,7 +68,7 @@ const ChatPage = () => {
       const newDocument = await uploadDocument.mutateAsync(file);
       setSelectedDocumentId(newDocument.id);
     } catch (error: any) {
-      alert(error.response?.data?.message || "Erro ao fazer upload");
+      toast.error(error.response?.data?.message || "Erro ao fazer upload");
     }
   };
 
@@ -72,31 +79,39 @@ const ChatPage = () => {
       await askQuestion.mutateAsync(question);
       setQuestion("");
     } catch (error: any) {
-      alert(error.response?.data?.message || "Erro ao fazer pergunta");
+      toast.error(error.response?.data?.message || "Erro ao fazer pergunta");
     }
   };
 
   const handleDeleteDocument = async (docId: string) => {
-    if (!confirm("Tem certeza que deseja apagar este documento?")) return;
+    setConfirmDelete({ isOpen: true, docId });
+  };
+
+  const confirmDeleteDocument = async () => {
+    if (!confirmDelete.docId) return;
 
     try {
-      await deleteDocument.mutateAsync(docId);
-      if (selectedDocumentId === docId) {
+      await deleteDocument.mutateAsync(confirmDelete.docId);
+      if (selectedDocumentId === confirmDelete.docId) {
         setSelectedDocumentId(null);
       }
       setShowDocMenu(null);
+      setConfirmDelete({ isOpen: false, docId: null });
     } catch (error: any) {
-      alert(error.response?.data?.message || "Erro ao apagar documento");
+      toast.error(error.response?.data?.message || "Erro ao apagar documento");
     }
   };
 
   const handleClearInteractions = async () => {
-    if (!confirm("Tem certeza que deseja limpar todo o histórico de conversas?")) return;
+    setConfirmClear(true);
+  };
 
+  const confirmClearInteractions = async () => {
     try {
       await clearInteractions.mutateAsync();
+      setConfirmClear(false);
     } catch (error: any) {
-      alert(error.response?.data?.message || "Erro ao limpar conversas");
+      toast.error(error.response?.data?.message || "Erro ao limpar conversas");
     }
   };
 
@@ -109,7 +124,7 @@ const ChatPage = () => {
         fileName: selectedDocument.fileName,
       });
     } catch (error: any) {
-      alert(error.response?.data?.message || "Erro ao fazer download");
+      toast.error(error.response?.data?.message || "Erro ao fazer download");
     }
   };
 
@@ -174,6 +189,26 @@ const ChatPage = () => {
           )}
         </div>
       </div>
+
+      <ConfirmModal
+        isOpen={confirmDelete.isOpen}
+        title="Apagar documento"
+        message="Tem certeza que deseja apagar este documento? Esta ação não pode ser desfeita."
+        onConfirm={confirmDeleteDocument}
+        onCancel={() => setConfirmDelete({ isOpen: false, docId: null })}
+        confirmText="Apagar"
+        cancelText="Cancelar"
+      />
+
+      <ConfirmModal
+        isOpen={confirmClear}
+        title="Limpar histórico"
+        message="Tem certeza que deseja limpar todo o histórico de conversas? Esta ação não pode ser desfeita."
+        onConfirm={confirmClearInteractions}
+        onCancel={() => setConfirmClear(false)}
+        confirmText="Limpar"
+        cancelText="Cancelar"
+      />
     </>
   );
 };
