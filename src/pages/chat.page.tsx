@@ -7,6 +7,7 @@ import { useUploadDocument } from "@/hooks/useUploadDocument";
 import { useAskQuestion } from "@/hooks/useAskQuestion";
 import { useDocumentPolling } from "@/hooks/useDocumentPolling";
 import { useDeleteDocument } from "@/hooks/useDeleteDocument";
+import { useClearInteractions } from "@/hooks/useClearInteractions";
 import { OcrStatus } from "@/types/document";
 import { useRouter } from "next/router";
 import {
@@ -33,6 +34,7 @@ const ChatPage = () => {
   const uploadDocument = useUploadDocument();
   const deleteDocument = useDeleteDocument();
   const askQuestion = useAskQuestion(selectedDocument?.id || "");
+  const clearInteractions = useClearInteractions(selectedDocument?.id || "");
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showDocMenu, setShowDocMenu] = useState<string | null>(null);
   const [question, setQuestion] = useState("");
@@ -76,6 +78,16 @@ const ChatPage = () => {
       setShowDocMenu(null);
     } catch (error: any) {
       alert(error.response?.data?.message || "Erro ao apagar documento");
+    }
+  };
+
+  const handleClearInteractions = async () => {
+    if (!confirm("Tem certeza que deseja limpar todo o histórico de conversas?")) return;
+
+    try {
+      await clearInteractions.mutateAsync();
+    } catch (error: any) {
+      alert(error.response?.data?.message || "Erro ao limpar conversas");
     }
   };
 
@@ -228,33 +240,43 @@ const ChatPage = () => {
         {selectedDocument ? (
           <>
             <div className="border-b border-[#88A0B0]/30 p-6 bg-white shadow-sm">
-              <div className="flex items-start gap-3">
-                <PaperClipIcon className="w-6 h-6 text-[#0F555A] flex-shrink-0 mt-1" />
-                <div className="flex-1">
+              <div className="flex items-center justify-between gap-3 mb-3">
+                <div className="flex items-center gap-3">
+                  <PaperClipIcon className="w-6 h-6 text-[#0F555A]" />
                   <h2 className="text-xl font-bold text-[#263743]">{selectedDocument.fileName}</h2>
-                  {selectedDocument.ocrStatus === OcrStatus.PENDING && (
-                    <div className="flex items-center gap-2 mt-3">
-                      <div className="animate-spin h-5 w-5 border-2 border-[#0F555A] border-t-transparent rounded-full"></div>
-                      <p className="text-sm text-[#456478] font-medium">Aguardando processamento...</p>
-                    </div>
-                  )}
-                  {selectedDocument.ocrStatus === OcrStatus.PROCESSING && (
-                    <div className="flex items-center gap-2 mt-3">
-                      <div className="animate-spin h-5 w-5 border-2 border-[#0F555A] border-t-transparent rounded-full"></div>
-                      <p className="text-sm text-[#456478] font-medium">Analisando documento...</p>
-                    </div>
-                  )}
-                  {selectedDocument.ocrStatus === OcrStatus.FAILED && (
-                    <p className="text-sm text-red-600 mt-3 font-medium">
-                      Erro ao processar documento
-                    </p>
-                  )}
-                  {selectedDocument.ocrStatus === OcrStatus.COMPLETED && selectedDocument.summary && (
-                    <p className="text-sm text-[#456478] mt-2 leading-relaxed">
-                      {selectedDocument.summary}
-                    </p>
-                  )}
                 </div>
+                <button
+                  onClick={handleClearInteractions}
+                  disabled={clearInteractions.isLoading || interactions.length === 0}
+                  className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#456478] hover:text-white hover:bg-[#456478] rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-[#456478] flex-shrink-0"
+                >
+                  <TrashIcon className="w-4 h-4" />
+                  Limpar Chat
+                </button>
+              </div>
+              <div className="pl-9">
+                {selectedDocument.ocrStatus === OcrStatus.PENDING && (
+                  <div className="flex items-center gap-2">
+                    <div className="animate-spin h-5 w-5 border-2 border-[#0F555A] border-t-transparent rounded-full"></div>
+                    <p className="text-sm text-[#456478] font-medium">Aguardando processamento...</p>
+                  </div>
+                )}
+                {selectedDocument.ocrStatus === OcrStatus.PROCESSING && (
+                  <div className="flex items-center gap-2">
+                    <div className="animate-spin h-5 w-5 border-2 border-[#0F555A] border-t-transparent rounded-full"></div>
+                    <p className="text-sm text-[#456478] font-medium">Analisando documento...</p>
+                  </div>
+                )}
+                {selectedDocument.ocrStatus === OcrStatus.FAILED && (
+                  <p className="text-sm text-red-600 font-medium">
+                    Erro ao processar documento
+                  </p>
+                )}
+                {selectedDocument.ocrStatus === OcrStatus.COMPLETED && selectedDocument.summary && (
+                  <p className="text-sm text-[#456478] leading-relaxed">
+                    {selectedDocument.summary}
+                  </p>
+                )}
               </div>
             </div>
 
