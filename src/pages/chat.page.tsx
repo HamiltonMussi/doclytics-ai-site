@@ -80,6 +80,7 @@ const ChatPage = () => {
     try {
       const newDocument = await uploadDocument.mutateAsync(file);
       setSelectedDocumentId(newDocument.id);
+      toast.success("Documento enviado com sucesso!");
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Erro ao fazer upload");
     }
