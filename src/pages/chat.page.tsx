@@ -141,26 +141,29 @@ const ChatPage = () => {
                   <DocumentTextIcon className="w-5 h-5 text-[#88A0B0] flex-shrink-0" />
                   <span className="truncate text-white">{doc.fileName}</span>
                 </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowDocMenu(showDocMenu === doc.id ? null : doc.id);
-                  }}
-                  className="absolute right-2 top-2.5 opacity-0 group-hover:opacity-100 p-1.5 hover:bg-[#0F555A] rounded-lg transition-all"
-                >
-                  <EllipsisVerticalIcon className="w-5 h-5 text-[#88A0B0]" />
-                </button>
-                {showDocMenu === doc.id && (
-                  <div className="absolute right-2 top-12 bg-[#0F555A] rounded-xl shadow-2xl overflow-hidden z-10 w-48 border border-[#456478]">
-                    <button
-                      onClick={() => handleDeleteDocument(doc.id)}
-                      className="w-full text-left px-4 py-3 text-sm hover:bg-[#456478] transition-colors text-red-400 flex items-center gap-2"
-                    >
-                      <TrashIcon className="w-4 h-4" />
-                      Apagar
-                    </button>
-                  </div>
-                )}
+                <div className="absolute right-2 top-2.5">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowDocMenu(showDocMenu === doc.id ? null : doc.id);
+                    }}
+                    onBlur={() => setTimeout(() => setShowDocMenu(null), 50)}
+                    className="opacity-0 group-hover:opacity-100 p-1.5 hover:bg-[#0F555A] rounded-lg transition-all"
+                  >
+                    <EllipsisVerticalIcon className="w-5 h-5 text-[#88A0B0]" />
+                  </button>
+                  {showDocMenu === doc.id && (
+                    <div className="absolute right-0 top-10 bg-[#0F555A] rounded-xl shadow-2xl overflow-hidden z-10 w-48 border border-[#456478]">
+                      <button
+                        onClick={() => handleDeleteDocument(doc.id)}
+                        className="w-full text-left px-4 py-3 text-sm hover:bg-[#456478] transition-colors text-red-400 flex items-center gap-2"
+                      >
+                        <TrashIcon className="w-4 h-4" />
+                        Apagar
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             ))}
           </div>
@@ -169,6 +172,7 @@ const ChatPage = () => {
         <div className="relative p-4 border-t border-[#456478]">
           <button
             onClick={() => setShowUserMenu(!showUserMenu)}
+            onBlur={() => setTimeout(() => setShowUserMenu(false), 50)}
             className="w-full text-left px-4 py-3 rounded-xl hover:bg-[#456478]/50 transition-colors flex items-center gap-3"
           >
             <UserCircleIcon className="w-6 h-6 text-[#88A0B0]" />
