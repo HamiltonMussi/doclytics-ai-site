@@ -2,10 +2,10 @@ import { OcrStatus } from "@/types/document";
 import { Spinner } from "./Spinner";
 import ReactMarkdown from "react-markdown";
 
-interface DocumentStatusIndicatorProps {
+type DocumentStatusIndicatorProps = {
   status: OcrStatus;
   summary?: string | null;
-}
+};
 
 export const DocumentStatusIndicator = ({ status, summary }: DocumentStatusIndicatorProps) => {
   if (status === OcrStatus.PENDING) {

@@ -1,8 +1,8 @@
 import { SparklesIcon } from "@heroicons/react/24/outline";
 
-interface EmptyStateProps {
+type EmptyStateProps = {
   userName?: string;
-}
+};
 
 export const EmptyState = ({ userName }: EmptyStateProps) => {
   return (

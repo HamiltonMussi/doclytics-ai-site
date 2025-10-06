@@ -1,6 +1,6 @@
-interface SpinnerProps {
+type SpinnerProps = {
   className?: string;
-}
+};
 
 export const Spinner = ({ className = "" }: SpinnerProps) => {
   return (

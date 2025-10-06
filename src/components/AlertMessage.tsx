@@ -1,7 +1,7 @@
-interface AlertMessageProps {
+type AlertMessageProps = {
   message: string;
   variant?: "error" | "success";
-}
+};
 
 export const AlertMessage = ({ message, variant = "error" }: AlertMessageProps) => {
   const styles = {

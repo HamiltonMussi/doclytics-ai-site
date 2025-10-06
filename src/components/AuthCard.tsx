@@ -1,9 +1,9 @@
 import { ReactNode } from "react";
 
-interface AuthCardProps {
+type AuthCardProps = {
   children: ReactNode;
   maxWidth?: "sm" | "md" | "lg";
-}
+};
 
 export const AuthCard = ({ children, maxWidth = "md" }: AuthCardProps) => {
   const widthClasses = {

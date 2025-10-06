@@ -1,9 +1,9 @@
 import { SparklesIcon } from "@heroicons/react/24/outline";
 
-interface AuthHeaderProps {
+type AuthHeaderProps = {
   title?: string;
   subtitle: string;
-}
+};
 
 export const AuthHeader = ({ title = "Doclytics", subtitle }: AuthHeaderProps) => {
   return (

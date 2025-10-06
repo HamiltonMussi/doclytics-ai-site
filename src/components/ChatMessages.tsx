@@ -1,14 +1,14 @@
 import ReactMarkdown from "react-markdown";
 
-interface Interaction {
+type Interaction = {
   id: string;
   question: string;
   answer: string;
-}
+};
 
-interface ChatMessagesProps {
+type ChatMessagesProps = {
   interactions: Interaction[];
-}
+};
 
 export const ChatMessages = ({ interactions }: ChatMessagesProps) => {
   return (

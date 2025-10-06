@@ -1,13 +1,13 @@
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { OcrStatus } from "@/types/document";
 
-interface ChatInputProps {
+type ChatInputProps = {
   value: string;
   onChange: (value: string) => void;
   onSubmit: () => void;
   isLoading: boolean;
   ocrStatus: OcrStatus;
-}
+};
 
 export const ChatInput = ({ value, onChange, onSubmit, isLoading, ocrStatus }: ChatInputProps) => {
   const isDisabled = isLoading || ocrStatus !== OcrStatus.COMPLETED;

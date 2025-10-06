@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
 
-interface FormInputProps {
+type FormInputProps = {
   label: string;
   icon?: ReactNode;
   type?: string;
@@ -11,7 +11,7 @@ interface FormInputProps {
   helperText?: string;
   register?: UseFormRegisterReturn;
   value?: string;
-}
+};
 
 export const FormInput = ({
   label,

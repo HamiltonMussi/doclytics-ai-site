@@ -1,11 +1,11 @@
 import { ReactNode } from "react";
 
-interface AuthLayoutProps {
+type AuthLayoutProps = {
   children: ReactNode;
   showHero?: boolean;
   heroTitle?: ReactNode;
   heroSubtitle?: ReactNode;
-}
+};
 
 export const AuthLayout = ({ children, showHero = false, heroTitle, heroSubtitle }: AuthLayoutProps) => {
   return (

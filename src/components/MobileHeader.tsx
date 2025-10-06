@@ -1,8 +1,8 @@
 import { Bars3Icon, SparklesIcon } from "@heroicons/react/24/outline";
 
-interface MobileHeaderProps {
+type MobileHeaderProps = {
   onMenuClick: () => void;
-}
+};
 
 export const MobileHeader = ({ onMenuClick }: MobileHeaderProps) => {
   return (

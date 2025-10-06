@@ -1,13 +1,13 @@
 import { ReactNode } from "react";
 
-interface FormButtonProps {
+type FormButtonProps = {
   children: ReactNode;
   isLoading?: boolean;
   loadingText?: string;
   disabled?: boolean;
   type?: "submit" | "button" | "reset";
   onClick?: () => void;
-}
+};
 
 export const FormButton = ({
   children,

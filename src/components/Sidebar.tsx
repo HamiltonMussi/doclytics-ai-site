@@ -10,12 +10,12 @@ import {
 } from "@heroicons/react/24/outline";
 import { DropdownMenu, DropdownMenuItem } from "./DropdownMenu";
 
-interface Document {
+type Document = {
   id: string;
   fileName: string;
-}
+};
 
-interface SidebarProps {
+type SidebarProps = {
   isOpen: boolean;
   onClose: () => void;
   documents: Document[];
@@ -31,7 +31,7 @@ interface SidebarProps {
   setShowDocMenu: (id: string | null) => void;
   showUserMenu: boolean;
   setShowUserMenu: (show: boolean) => void;
-}
+};
 
 export const Sidebar = ({
   isOpen,

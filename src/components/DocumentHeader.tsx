@@ -2,7 +2,7 @@ import { PaperClipIcon, ArrowDownTrayIcon, TrashIcon } from "@heroicons/react/24
 import { OcrStatus } from "@/types/document";
 import { DocumentStatusIndicator } from "./DocumentStatusIndicator";
 
-interface DocumentHeaderProps {
+type DocumentHeaderProps = {
   fileName: string;
   ocrStatus: OcrStatus;
   summary?: string | null;
@@ -11,7 +11,7 @@ interface DocumentHeaderProps {
   isDownloading: boolean;
   isClearing: boolean;
   hasInteractions: boolean;
-}
+};
 
 export const DocumentHeader = ({
   fileName,
