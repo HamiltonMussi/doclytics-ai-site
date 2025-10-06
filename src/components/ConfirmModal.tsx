@@ -25,7 +25,10 @@ export const ConfirmModal = ({
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center">
-      <div className="fixed inset-0 bg-black/50" onClick={isLoading ? undefined : onCancel} />
+      <div
+        className="fixed inset-0 bg-black/50"
+        onClick={isLoading ? undefined : onCancel}
+      />
       <div className="relative bg-white rounded-2xl shadow-2xl p-6 max-w-md w-full mx-4">
         <h3 className="text-xl font-bold text-[#263743] mb-2">{title}</h3>
         <p className="text-[#456478] mb-6">{message}</p>
