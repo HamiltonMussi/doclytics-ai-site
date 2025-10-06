@@ -10,7 +10,7 @@ export const useClearInteractions = (documentId: string) => {
     },
     {
       onSuccess: () => {
-        queryClient.setQueryData(["interactions", documentId], []);
+        queryClient.invalidateQueries(["interactions", documentId]);
       },
     },
   );
