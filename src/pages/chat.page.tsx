@@ -11,6 +11,7 @@ import { useClearInteractions } from "@/hooks/useClearInteractions";
 import { useDownloadDocument } from "@/hooks/useDownloadDocument";
 import { OcrStatus } from "@/types/document";
 import { useRouter } from "next/router";
+import ReactMarkdown from "react-markdown";
 import {
   PlusIcon,
   PaperClipIcon,
@@ -299,9 +300,9 @@ const ChatPage = () => {
                   </p>
                 )}
                 {selectedDocument.ocrStatus === OcrStatus.COMPLETED && selectedDocument.summary && (
-                  <p className="text-sm text-[#456478] leading-relaxed">
-                    {selectedDocument.summary}
-                  </p>
+                  <div className="text-sm text-[#456478] leading-relaxed prose prose-sm max-w-none">
+                    <ReactMarkdown>{selectedDocument.summary}</ReactMarkdown>
+                  </div>
                 )}
               </div>
             </div>
@@ -316,7 +317,9 @@ const ChatPage = () => {
                   </div>
                   <div className="flex justify-start">
                     <div className="bg-white border border-[#88A0B0]/30 text-[#263743] px-5 py-3 rounded-2xl rounded-tl-sm max-w-md shadow-sm">
-                      <p className="text-sm leading-relaxed">{interaction.answer}</p>
+                      <div className="text-sm leading-relaxed prose prose-sm max-w-none">
+                        <ReactMarkdown>{interaction.answer}</ReactMarkdown>
+                      </div>
                     </div>
                   </div>
                 </div>
