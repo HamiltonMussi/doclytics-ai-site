@@ -9,8 +9,6 @@ export const useDocumentPolling = (documentId: string | null) => {
   useEffect(() => {
     if (!documentId) return;
 
-    let interval: NodeJS.Timeout;
-
     const checkStatus = async () => {
       try {
         const response = await api.get(`/documents/${documentId}`);
@@ -36,7 +34,7 @@ export const useDocumentPolling = (documentId: string | null) => {
       }
     };
 
-    interval = setInterval(checkStatus, 3000);
+    const interval = setInterval(checkStatus, 3000);
 
     return () => clearInterval(interval);
   }, [documentId, queryClient]);
