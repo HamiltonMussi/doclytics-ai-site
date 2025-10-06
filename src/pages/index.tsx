@@ -5,7 +5,13 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useState } from "react";
 import Link from "next/link";
 import Head from "next/head";
-import { SparklesIcon, EnvelopeIcon, LockClosedIcon } from "@heroicons/react/24/outline";
+import { EnvelopeIcon, LockClosedIcon } from "@heroicons/react/24/outline";
+import { AuthLayout } from "@/components/AuthLayout";
+import { AuthCard } from "@/components/AuthCard";
+import { AuthHeader } from "@/components/AuthHeader";
+import { FormInput } from "@/components/FormInput";
+import { FormButton } from "@/components/FormButton";
+import { AlertMessage } from "@/components/AlertMessage";
 
 const loginSchema = z.object({
   email: z.string().email("Email inválido"),
@@ -44,102 +50,58 @@ const Home = () => {
       <Head>
         <title>Login - Doclytics</title>
       </Head>
-      <div className="min-h-screen flex items-center justify-center bg-[#EAFBFF] px-4 lg:px-0">
-      <div className="w-full max-w-6xl lg:grid lg:grid-cols-2 lg:gap-16 lg:items-center">
-        <div className="max-w-md w-full mx-auto">
-          <div className="bg-white rounded-2xl shadow-2xl border border-[#88A0B0]/20 p-8">
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-[#B1EC04]/20 rounded-full mb-4">
-                <SparklesIcon className="w-8 h-8 text-[#0F555A]" />
-              </div>
-              <h2 className="text-3xl font-bold text-[#263743]">Doclytics</h2>
-              <p className="mt-2 text-sm text-[#456478]">Entre na sua conta</p>
-            </div>
-
-            <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
-              <div>
-                <label htmlFor="email" className="block text-sm font-semibold text-[#263743] mb-2">
-                  Email
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <EnvelopeIcon className="h-5 w-5 text-[#88A0B0]" />
-                  </div>
-                  <input
-                    {...register("email")}
-                    type="email"
-                    className="block w-full pl-10 pr-4 py-3 border-2 border-[#88A0B0]/40 rounded-xl focus:outline-none focus:border-[#0F555A] transition-colors text-[#263743] placeholder:text-[#88A0B0]"
-                    placeholder="seu@email.com"
-                  />
-                </div>
-                {errors.email && (
-                  <p className="mt-2 text-sm text-red-600 font-medium">{errors.email.message}</p>
-                )}
-              </div>
-
-              <div>
-                <label htmlFor="password" className="block text-sm font-semibold text-[#263743] mb-2">
-                  Senha
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <LockClosedIcon className="h-5 w-5 text-[#88A0B0]" />
-                  </div>
-                  <input
-                    {...register("password")}
-                    type="password"
-                    className="block w-full pl-10 pr-4 py-3 border-2 border-[#88A0B0]/40 rounded-xl focus:outline-none focus:border-[#0F555A] transition-colors text-[#263743] placeholder:text-[#88A0B0]"
-                    placeholder="••••••••"
-                  />
-                </div>
-                {errors.password && (
-                  <p className="mt-2 text-sm text-red-600 font-medium">{errors.password.message}</p>
-                )}
-              </div>
-
-              {error && (
-                <div className="bg-red-50 border-2 border-red-200 text-red-600 px-4 py-3 rounded-xl text-sm font-medium">
-                  {error}
-                </div>
-              )}
-
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full flex justify-center items-center gap-2 py-3 px-4 rounded-xl text-sm font-semibold text-[#263743] bg-[#B1EC04] hover:bg-[#9dd604] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0F555A] disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-lg"
-              >
-                {isLoading ? (
-                  <>
-                    <div className="animate-spin h-5 w-5 border-2 border-[#263743] border-t-transparent rounded-full"></div>
-                    Entrando...
-                  </>
-                ) : (
-                  "Entrar"
-                )}
-              </button>
-
-              <p className="text-center text-sm text-[#456478] pt-2">
-                Não tem uma conta?{" "}
-                <Link href="/register" className="font-semibold text-[#0F555A] hover:text-[#263743] transition-colors">
-                  Cadastre-se
-                </Link>
-              </p>
-            </form>
-          </div>
-        </div>
-
-        <div className="hidden lg:flex lg:flex-col lg:justify-center lg:pl-8">
-          <h1 className="text-6xl font-bold text-[#263743] leading-tight mb-6">
+      <AuthLayout
+        showHero
+        heroTitle={
+          <>
             Transforme seus documentos em
             <span className="block text-[#0F555A] mt-2">conhecimento</span>
-          </h1>
-          <p className="text-xl text-[#456478] leading-relaxed">
+          </>
+        }
+        heroSubtitle={
+          <>
             Análise inteligente de documentos com IA.
             <span className="block mt-2">Pergunte, aprenda e descubra.</span>
-          </p>
-        </div>
-      </div>
-    </div>
+          </>
+        }
+      >
+        <AuthCard>
+          <AuthHeader subtitle="Entre na sua conta" />
+
+          <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
+            <FormInput
+              label="Email"
+              icon={<EnvelopeIcon className="h-5 w-5 text-[#88A0B0]" />}
+              type="email"
+              placeholder="seu@email.com"
+              register={register("email")}
+              error={errors.email?.message}
+            />
+
+            <FormInput
+              label="Senha"
+              icon={<LockClosedIcon className="h-5 w-5 text-[#88A0B0]" />}
+              type="password"
+              placeholder="••••••••"
+              register={register("password")}
+              error={errors.password?.message}
+            />
+
+            {error && <AlertMessage message={error} variant="error" />}
+
+            <FormButton isLoading={isLoading} loadingText="Entrando...">
+              Entrar
+            </FormButton>
+
+            <p className="text-center text-sm text-[#456478] pt-2">
+              Não tem uma conta?{" "}
+              <Link href="/register" className="font-semibold text-[#0F555A] hover:text-[#263743] transition-colors">
+                Cadastre-se
+              </Link>
+            </p>
+          </form>
+        </AuthCard>
+      </AuthLayout>
     </>
   );
 };
