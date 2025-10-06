@@ -12,21 +12,12 @@ import { useDownloadDocument } from "@/hooks/useDownloadDocument";
 import { OcrStatus } from "@/types/document";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import ReactMarkdown from "react-markdown";
-import {
-  PlusIcon,
-  PaperClipIcon,
-  ArrowRightIcon,
-  EllipsisVerticalIcon,
-  UserCircleIcon,
-  ArrowRightOnRectangleIcon,
-  TrashIcon,
-  DocumentTextIcon,
-  SparklesIcon,
-  Bars3Icon,
-  XMarkIcon,
-  ArrowDownTrayIcon,
-} from "@heroicons/react/24/outline";
+import { Sidebar } from "@/components/Sidebar";
+import { MobileHeader } from "@/components/MobileHeader";
+import { DocumentHeader } from "@/components/DocumentHeader";
+import { ChatMessages } from "@/components/ChatMessages";
+import { ChatInput } from "@/components/ChatInput";
+import { EmptyState } from "@/components/EmptyState";
 
 const ChatPage = () => {
   const { user, signOut } = useAuth();
@@ -128,276 +119,61 @@ const ChatPage = () => {
         <title>Chat - Doclytics</title>
       </Head>
       <div className="fixed inset-0 flex bg-[#EAFBFF] overflow-x-hidden">
-      {isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-          onClick={() => setIsSidebarOpen(false)}
+        <Sidebar
+          isOpen={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
+          documents={documents}
+          selectedDocumentId={selectedDocumentId}
+          onDocumentSelect={setSelectedDocumentId}
+          onDocumentDelete={handleDeleteDocument}
+          onFileUpload={handleFileUpload}
+          isUploading={uploadDocument.isLoading}
+          userName={user?.name}
+          onProfileClick={() => {
+            setShowUserMenu(false);
+            router.push("/profile");
+          }}
+          onSignOut={() => {
+            setShowUserMenu(false);
+            signOut();
+          }}
+          showDocMenu={showDocMenu}
+          setShowDocMenu={setShowDocMenu}
+          showUserMenu={showUserMenu}
+          setShowUserMenu={setShowUserMenu}
         />
-      )}
 
-      <div className={`
-        fixed lg:static inset-y-0 left-0 z-50
-        w-72 bg-[#263743] text-white flex flex-col shadow-xl
-        transform transition-transform duration-300 ease-in-out
-        ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-      `}>
-        <div className="p-6 border-b border-[#456478] flex items-center justify-between flex-shrink-0">
-          <div className="flex items-center gap-2">
-            <SparklesIcon className="w-7 h-7 text-[#B1EC04]" />
-            <h1 className="text-2xl font-bold text-white">Doclytics</h1>
-          </div>
-          <button
-            onClick={() => setIsSidebarOpen(false)}
-            className="lg:hidden text-white p-1 hover:bg-[#456478] rounded-lg transition-colors"
-          >
-            <XMarkIcon className="w-6 h-6" />
-          </button>
-        </div>
+        <div className="flex-1 flex flex-col min-h-0 overflow-x-hidden">
+          <MobileHeader onMenuClick={() => setIsSidebarOpen(true)} />
 
-        <div className="p-4 flex-shrink-0">
-          <label className="block">
-            <input
-              type="file"
-              className="hidden"
-              accept=".jpg,.jpeg,.png,.pdf"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) handleFileUpload(file);
-              }}
-              disabled={uploadDocument.isLoading}
-            />
-            <span className="flex items-center justify-center gap-2 bg-[#B1EC04] hover:bg-[#9dd604] text-[#263743] font-semibold px-4 py-3 rounded-xl cursor-pointer text-sm transition-colors shadow-lg">
-              <PlusIcon className="w-5 h-5" />
-              {uploadDocument.isLoading ? "Enviando..." : "Novo documento"}
-            </span>
-          </label>
-        </div>
+          {selectedDocument ? (
+            <>
+              <DocumentHeader
+                fileName={selectedDocument.fileName}
+                ocrStatus={selectedDocument.ocrStatus}
+                summary={selectedDocument.summary}
+                onDownload={handleDownloadDocument}
+                onClearChat={handleClearInteractions}
+                isDownloading={downloadDocument.isLoading}
+                isClearing={clearInteractions.isLoading}
+                hasInteractions={interactions.length > 0}
+              />
 
-        <div className="flex-1 overflow-y-auto min-h-0">
-          <div className="p-3 space-y-2">
-            {documents.map((doc) => (
-              <div key={doc.id} className="relative group">
-                <button
-                  onClick={() => setSelectedDocumentId(doc.id)}
-                  className={`w-full text-left px-4 py-3 rounded-xl text-sm transition-all flex items-center gap-3 ${
-                    selectedDocument?.id === doc.id
-                      ? "bg-[#456478] shadow-md"
-                      : "hover:bg-[#456478]/50"
-                  }`}
-                >
-                  <DocumentTextIcon className="w-5 h-5 text-[#88A0B0] flex-shrink-0" />
-                  <span className="truncate text-white">{doc.fileName}</span>
-                </button>
-                <div className="absolute right-2 top-2.5">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setShowDocMenu(showDocMenu === doc.id ? null : doc.id);
-                    }}
-                    onBlur={() => setTimeout(() => setShowDocMenu(null), 150)}
-                    className="opacity-0 group-hover:opacity-100 p-1.5 hover:bg-[#0F555A] rounded-lg transition-all"
-                  >
-                    <EllipsisVerticalIcon className="w-5 h-5 text-[#88A0B0]" />
-                  </button>
-                  {showDocMenu === doc.id && (
-                    <div className="absolute right-0 top-10 bg-[#0F555A] rounded-xl shadow-2xl overflow-hidden z-10 w-48 border border-[#456478]">
-                      <button
-                        onMouseDown={(e) => {
-                          e.preventDefault();
-                          handleDeleteDocument(doc.id);
-                        }}
-                        className="w-full text-left px-4 py-3 text-sm hover:bg-[#456478] transition-colors text-red-400 flex items-center gap-2"
-                      >
-                        <TrashIcon className="w-4 h-4" />
-                        Apagar
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+              <ChatMessages interactions={interactions} />
 
-        <div className="relative p-4 border-t border-[#456478] flex-shrink-0">
-          <button
-            onClick={() => setShowUserMenu(!showUserMenu)}
-            onBlur={() => setTimeout(() => setShowUserMenu(false), 150)}
-            className="w-full text-left px-4 py-3 rounded-xl hover:bg-[#456478]/50 transition-colors flex items-center gap-3"
-          >
-            <UserCircleIcon className="w-6 h-6 text-[#88A0B0]" />
-            <p className="text-sm truncate text-white font-medium">{user?.name}</p>
-          </button>
-
-          {showUserMenu && (
-            <div className="absolute bottom-full left-4 right-4 mb-2 bg-[#0F555A] rounded-xl shadow-2xl overflow-hidden border border-[#456478]">
-              <button
-                onMouseDown={(e) => {
-                  e.preventDefault();
-                  setShowUserMenu(false);
-                  router.push("/profile");
-                }}
-                className="w-full text-left px-4 py-3 text-sm hover:bg-[#456478] transition-colors text-white flex items-center gap-2"
-              >
-                <UserCircleIcon className="w-4 h-4" />
-                Editar perfil
-              </button>
-              <button
-                onMouseDown={(e) => {
-                  e.preventDefault();
-                  setShowUserMenu(false);
-                  signOut();
-                }}
-                className="w-full text-left px-4 py-3 text-sm hover:bg-[#456478] transition-colors text-red-400 flex items-center gap-2"
-              >
-                <ArrowRightOnRectangleIcon className="w-4 h-4" />
-                Sair
-              </button>
-            </div>
+              <ChatInput
+                value={question}
+                onChange={setQuestion}
+                onSubmit={handleAskQuestion}
+                isLoading={askQuestion.isLoading}
+                ocrStatus={selectedDocument.ocrStatus}
+              />
+            </>
+          ) : (
+            <EmptyState userName={user?.name} />
           )}
         </div>
       </div>
-
-      <div className="flex-1 flex flex-col min-h-0 overflow-x-hidden">
-        <div className="lg:hidden bg-[#263743] p-4 flex items-center gap-3 shadow-md flex-shrink-0">
-          <button
-            onClick={() => setIsSidebarOpen(true)}
-            className="text-white p-2 hover:bg-[#456478] rounded-lg transition-colors"
-          >
-            <Bars3Icon className="w-6 h-6" />
-          </button>
-          <div className="flex items-center gap-2">
-            <SparklesIcon className="w-6 h-6 text-[#B1EC04]" />
-            <h1 className="text-xl font-bold text-white">Doclytics</h1>
-          </div>
-        </div>
-
-        {selectedDocument ? (
-          <>
-            <div className="border-b border-[#88A0B0]/30 p-4 sm:p-6 bg-white shadow-sm flex-shrink-0">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
-                <div className="flex items-center gap-3 min-w-0">
-                  <PaperClipIcon className="w-6 h-6 text-[#0F555A] flex-shrink-0" />
-                  <h2 className="text-lg sm:text-xl font-bold text-[#263743] truncate">{selectedDocument.fileName}</h2>
-                </div>
-                <div className="flex items-center justify-center gap-2 flex-shrink-0">
-                  <button
-                    onClick={handleDownloadDocument}
-                    disabled={downloadDocument.isLoading || selectedDocument.ocrStatus !== OcrStatus.COMPLETED}
-                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#456478] hover:text-white hover:bg-[#456478] rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-[#456478] flex-shrink-0"
-                  >
-                    <ArrowDownTrayIcon className="w-4 h-4" />
-                    Download
-                  </button>
-                  <button
-                    onClick={handleClearInteractions}
-                    disabled={clearInteractions.isLoading || interactions.length === 0}
-                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#456478] hover:text-white hover:bg-[#456478] rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-[#456478] flex-shrink-0"
-                  >
-                    <TrashIcon className="w-4 h-4" />
-                    Limpar Chat
-                  </button>
-                </div>
-              </div>
-              <div className="pl-0 sm:pl-9">
-                {selectedDocument.ocrStatus === OcrStatus.PENDING && (
-                  <div className="flex items-center gap-2">
-                    <div className="animate-spin h-5 w-5 border-2 border-[#0F555A] border-t-transparent rounded-full"></div>
-                    <p className="text-sm text-[#456478] font-medium">Aguardando processamento...</p>
-                  </div>
-                )}
-                {selectedDocument.ocrStatus === OcrStatus.PROCESSING && (
-                  <div className="flex items-center gap-2">
-                    <div className="animate-spin h-5 w-5 border-2 border-[#0F555A] border-t-transparent rounded-full"></div>
-                    <p className="text-sm text-[#456478] font-medium">Analisando documento...</p>
-                  </div>
-                )}
-                {selectedDocument.ocrStatus === OcrStatus.FAILED && (
-                  <p className="text-sm text-red-600 font-medium">
-                    Erro ao processar documento
-                  </p>
-                )}
-                {selectedDocument.ocrStatus === OcrStatus.COMPLETED && selectedDocument.summary && (
-                  <div className="text-sm text-[#456478] leading-relaxed prose prose-sm max-w-none">
-                    <ReactMarkdown>{selectedDocument.summary}</ReactMarkdown>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 bg-[#EAFBFF] min-h-0">
-              {interactions.map((interaction) => (
-                <div key={interaction.id} className="space-y-3">
-                  <div className="flex justify-end">
-                    <div className="bg-[#0F555A] text-white px-5 py-3 rounded-2xl rounded-tr-sm max-w-md shadow-md">
-                      <p className="text-sm leading-relaxed">{interaction.question}</p>
-                    </div>
-                  </div>
-                  <div className="flex justify-start">
-                    <div className="bg-white border border-[#88A0B0]/30 text-[#263743] px-5 py-3 rounded-2xl rounded-tl-sm max-w-md shadow-sm">
-                      <div className="text-sm leading-relaxed prose prose-sm max-w-none">
-                        <ReactMarkdown>{interaction.answer}</ReactMarkdown>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="border-t border-[#88A0B0]/30 p-4 sm:p-6 bg-white shadow-lg flex-shrink-0">
-              <div className="flex gap-3">
-                <input
-                  type="text"
-                  value={question}
-                  onChange={(e) => setQuestion(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleAskQuestion()}
-                  placeholder={
-                    selectedDocument.ocrStatus === OcrStatus.COMPLETED
-                      ? "Faça uma pergunta sobre o documento..."
-                      : "Aguarde o processamento do documento..."
-                  }
-                  className="flex-1 px-4 sm:px-5 py-3 border-2 border-[#88A0B0]/40 rounded-xl focus:outline-none focus:border-[#0F555A] transition-colors text-[#263743] placeholder:text-[#88A0B0] text-sm sm:text-base"
-                  disabled={
-                    askQuestion.isLoading ||
-                    selectedDocument.ocrStatus !== OcrStatus.COMPLETED
-                  }
-                />
-                <button
-                  onClick={handleAskQuestion}
-                  disabled={
-                    askQuestion.isLoading ||
-                    !question.trim() ||
-                    selectedDocument.ocrStatus !== OcrStatus.COMPLETED
-                  }
-                  className="px-4 sm:px-6 py-3 bg-[#B1EC04] text-[#263743] font-semibold rounded-xl hover:bg-[#9dd604] disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-md flex items-center gap-2"
-                >
-                  {askQuestion.isLoading ? (
-                    <div className="animate-spin h-5 w-5 border-2 border-[#263743] border-t-transparent rounded-full"></div>
-                  ) : (
-                    <>
-                      Enviar
-                      <ArrowRightIcon className="w-5 h-5" />
-                    </>
-                  )}
-                </button>
-              </div>
-            </div>
-          </>
-        ) : (
-          <div className="flex-1 flex items-center justify-center">
-            <div className="text-center px-4">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-[#B1EC04]/20 rounded-full mb-4">
-                <SparklesIcon className="w-10 h-10 text-[#0F555A]" />
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-[#263743]">Olá, {user?.name}!</h2>
-              <p className="text-[#456478] mt-3 text-base sm:text-lg">
-                Selecione um documento ou faça upload de um novo
-              </p>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
     </>
   );
 };
