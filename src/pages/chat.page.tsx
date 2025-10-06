@@ -109,7 +109,7 @@ const ChatPage = () => {
   };
 
   return (
-    <div className="flex h-screen bg-[#EAFBFF] relative">
+    <div className="fixed inset-0 flex bg-[#EAFBFF] overflow-x-hidden">
       {isSidebarOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-40 lg:hidden"
@@ -123,7 +123,7 @@ const ChatPage = () => {
         transform transition-transform duration-300 ease-in-out
         ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
-        <div className="p-6 border-b border-[#456478] flex items-center justify-between">
+        <div className="p-6 border-b border-[#456478] flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-2">
             <SparklesIcon className="w-7 h-7 text-[#B1EC04]" />
             <h1 className="text-2xl font-bold text-white">Doclytics</h1>
@@ -136,7 +136,7 @@ const ChatPage = () => {
           </button>
         </div>
 
-        <div className="p-4">
+        <div className="p-4 flex-shrink-0">
           <label className="block">
             <input
               type="file"
@@ -155,7 +155,7 @@ const ChatPage = () => {
           </label>
         </div>
 
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto min-h-0">
           <div className="p-3 space-y-2">
             {documents.map((doc) => (
               <div key={doc.id} className="relative group">
@@ -201,7 +201,7 @@ const ChatPage = () => {
           </div>
         </div>
 
-        <div className="relative p-4 border-t border-[#456478]">
+        <div className="relative p-4 border-t border-[#456478] flex-shrink-0">
           <button
             onClick={() => setShowUserMenu(!showUserMenu)}
             onBlur={() => setTimeout(() => setShowUserMenu(false), 150)}
@@ -240,7 +240,7 @@ const ChatPage = () => {
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col min-h-0">
+      <div className="flex-1 flex flex-col min-h-0 overflow-x-hidden">
         <div className="lg:hidden bg-[#263743] p-4 flex items-center gap-3 shadow-md flex-shrink-0">
           <button
             onClick={() => setIsSidebarOpen(true)}
@@ -256,11 +256,11 @@ const ChatPage = () => {
 
         {selectedDocument ? (
           <>
-            <div className="border-b border-[#88A0B0]/30 p-6 bg-white shadow-sm">
+            <div className="border-b border-[#88A0B0]/30 p-4 sm:p-6 bg-white shadow-sm flex-shrink-0">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
                 <div className="flex items-center gap-3 min-w-0">
                   <PaperClipIcon className="w-6 h-6 text-[#0F555A] flex-shrink-0" />
-                  <h2 className="text-xl font-bold text-[#263743] truncate">{selectedDocument.fileName}</h2>
+                  <h2 className="text-lg sm:text-xl font-bold text-[#263743] truncate">{selectedDocument.fileName}</h2>
                 </div>
                 <div className="flex items-center justify-center gap-2 flex-shrink-0">
                   <button
@@ -281,7 +281,7 @@ const ChatPage = () => {
                   </button>
                 </div>
               </div>
-              <div className="pl-9">
+              <div className="pl-0 sm:pl-9">
                 {selectedDocument.ocrStatus === OcrStatus.PENDING && (
                   <div className="flex items-center gap-2">
                     <div className="animate-spin h-5 w-5 border-2 border-[#0F555A] border-t-transparent rounded-full"></div>
@@ -307,7 +307,7 @@ const ChatPage = () => {
               </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-[#EAFBFF]">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 bg-[#EAFBFF] min-h-0">
               {interactions.map((interaction) => (
                 <div key={interaction.id} className="space-y-3">
                   <div className="flex justify-end">
@@ -338,7 +338,7 @@ const ChatPage = () => {
                       ? "Faça uma pergunta sobre o documento..."
                       : "Aguarde o processamento do documento..."
                   }
-                  className="flex-1 px-5 py-3 border-2 border-[#88A0B0]/40 rounded-xl focus:outline-none focus:border-[#0F555A] transition-colors text-[#263743] placeholder:text-[#88A0B0]"
+                  className="flex-1 px-4 sm:px-5 py-3 border-2 border-[#88A0B0]/40 rounded-xl focus:outline-none focus:border-[#0F555A] transition-colors text-[#263743] placeholder:text-[#88A0B0] text-sm sm:text-base"
                   disabled={
                     askQuestion.isLoading ||
                     selectedDocument.ocrStatus !== OcrStatus.COMPLETED
@@ -351,7 +351,7 @@ const ChatPage = () => {
                     !question.trim() ||
                     selectedDocument.ocrStatus !== OcrStatus.COMPLETED
                   }
-                  className="px-6 py-3 bg-[#B1EC04] text-[#263743] font-semibold rounded-xl hover:bg-[#9dd604] disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-md flex items-center gap-2"
+                  className="px-4 sm:px-6 py-3 bg-[#B1EC04] text-[#263743] font-semibold rounded-xl hover:bg-[#9dd604] disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-md flex items-center gap-2"
                 >
                   {askQuestion.isLoading ? (
                     <div className="animate-spin h-5 w-5 border-2 border-[#263743] border-t-transparent rounded-full"></div>
@@ -367,12 +367,12 @@ const ChatPage = () => {
           </>
         ) : (
           <div className="flex-1 flex items-center justify-center">
-            <div className="text-center">
+            <div className="text-center px-4">
               <div className="inline-flex items-center justify-center w-20 h-20 bg-[#B1EC04]/20 rounded-full mb-4">
                 <SparklesIcon className="w-10 h-10 text-[#0F555A]" />
               </div>
-              <h2 className="text-3xl font-bold text-[#263743]">Olá, {user?.name}!</h2>
-              <p className="text-[#456478] mt-3 text-lg">
+              <h2 className="text-2xl sm:text-3xl font-bold text-[#263743]">Olá, {user?.name}!</h2>
+              <p className="text-[#456478] mt-3 text-base sm:text-lg">
                 Selecione um documento ou faça upload de um novo
               </p>
             </div>
