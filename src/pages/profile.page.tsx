@@ -7,7 +7,11 @@ import { z } from "zod";
 import { api } from "@/services/api";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import { ArrowLeftIcon, UserIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowLeftIcon,
+  UserIcon,
+  EnvelopeIcon,
+} from "@heroicons/react/24/outline";
 import { AuthCard } from "@/components/AuthCard";
 import { FormInput } from "@/components/FormInput";
 import { FormButton } from "@/components/FormButton";
@@ -76,8 +80,12 @@ const ProfilePage = () => {
 
           <AuthCard maxWidth="lg">
             <div className="mb-8">
-              <h1 className="text-3xl font-bold text-[#263743]">Editar Perfil</h1>
-              <p className="text-[#456478] mt-2">Atualize suas informações pessoais</p>
+              <h1 className="text-3xl font-bold text-[#263743]">
+                Editar Perfil
+              </h1>
+              <p className="text-[#456478] mt-2">
+                Atualize suas informações pessoais
+              </p>
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

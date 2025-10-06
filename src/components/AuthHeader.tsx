@@ -5,7 +5,10 @@ type AuthHeaderProps = {
   subtitle: string;
 };
 
-export const AuthHeader = ({ title = "Doclytics", subtitle }: AuthHeaderProps) => {
+export const AuthHeader = ({
+  title = "Doclytics",
+  subtitle,
+}: AuthHeaderProps) => {
   return (
     <div className="text-center mb-8">
       <div className="inline-flex items-center justify-center w-16 h-16 bg-[#B1EC04]/20 rounded-full mb-4">

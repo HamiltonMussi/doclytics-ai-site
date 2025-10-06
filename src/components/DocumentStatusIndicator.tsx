@@ -7,12 +7,17 @@ type DocumentStatusIndicatorProps = {
   summary?: string | null;
 };
 
-export const DocumentStatusIndicator = ({ status, summary }: DocumentStatusIndicatorProps) => {
+export const DocumentStatusIndicator = ({
+  status,
+  summary,
+}: DocumentStatusIndicatorProps) => {
   if (status === OcrStatus.PENDING) {
     return (
       <div className="flex items-center gap-2">
         <Spinner />
-        <p className="text-sm text-[#456478] font-medium">Aguardando processamento...</p>
+        <p className="text-sm text-[#456478] font-medium">
+          Aguardando processamento...
+        </p>
       </div>
     );
   }
@@ -21,7 +26,9 @@ export const DocumentStatusIndicator = ({ status, summary }: DocumentStatusIndic
     return (
       <div className="flex items-center gap-2">
         <Spinner />
-        <p className="text-sm text-[#456478] font-medium">Analisando documento...</p>
+        <p className="text-sm text-[#456478] font-medium">
+          Analisando documento...
+        </p>
       </div>
     );
   }

@@ -12,6 +12,6 @@ export const useDeleteDocument = () => {
       onSuccess: () => {
         queryClient.invalidateQueries("documents");
       },
-    }
+    },
   );
 };

@@ -17,7 +17,7 @@ export const useDocumentPolling = (documentId: string | null) => {
         const document: Document = response.data;
 
         queryClient.setQueryData<Document[]>("documents", (old = []) =>
-          old.map((doc) => (doc.id === documentId ? document : doc))
+          old.map((doc) => (doc.id === documentId ? document : doc)),
         );
 
         if (
@@ -27,7 +27,10 @@ export const useDocumentPolling = (documentId: string | null) => {
           clearInterval(interval);
         }
       } catch (error: any) {
-        if (error.code === "ERR_NETWORK" || error.message?.includes("Network Error")) {
+        if (
+          error.code === "ERR_NETWORK" ||
+          error.message?.includes("Network Error")
+        ) {
           clearInterval(interval);
         }
       }

@@ -12,6 +12,6 @@ export const useInteractions = (documentId: string | null) => {
     },
     {
       enabled: !!documentId,
-    }
+    },
   );
 };

@@ -59,12 +59,14 @@ export const Sidebar = ({
         />
       )}
 
-      <div className={`
+      <div
+        className={`
         fixed lg:static inset-y-0 left-0 z-50
         w-72 bg-[#263743] text-white flex flex-col shadow-xl
         transform transition-transform duration-300 ease-in-out
-        ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-      `}>
+        ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+      `}
+      >
         <div className="p-6 border-b border-[#456478] flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-2">
             <SparklesIcon className="w-7 h-7 text-[#B1EC04]" />
@@ -123,7 +125,10 @@ export const Sidebar = ({
                   >
                     <EllipsisVerticalIcon className="w-5 h-5 text-[#88A0B0]" />
                   </button>
-                  <DropdownMenu isOpen={showDocMenu === doc.id} className="right-0 top-10 w-48">
+                  <DropdownMenu
+                    isOpen={showDocMenu === doc.id}
+                    className="right-0 top-10 w-48"
+                  >
                     <DropdownMenuItem
                       onClick={() => onDocumentDelete(doc.id)}
                       icon={<TrashIcon className="w-4 h-4" />}
@@ -145,10 +150,15 @@ export const Sidebar = ({
             className="w-full text-left px-4 py-3 rounded-xl hover:bg-[#456478]/50 transition-colors flex items-center gap-3"
           >
             <UserCircleIcon className="w-6 h-6 text-[#88A0B0]" />
-            <p className="text-sm truncate text-white font-medium">{userName}</p>
+            <p className="text-sm truncate text-white font-medium">
+              {userName}
+            </p>
           </button>
 
-          <DropdownMenu isOpen={showUserMenu} className="bottom-full left-4 right-4 mb-2">
+          <DropdownMenu
+            isOpen={showUserMenu}
+            className="bottom-full left-4 right-4 mb-2"
+          >
             <DropdownMenuItem
               onClick={onProfileClick}
               icon={<UserCircleIcon className="w-4 h-4" />}

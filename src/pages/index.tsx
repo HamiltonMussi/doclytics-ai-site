@@ -95,7 +95,10 @@ const Home = () => {
 
             <p className="text-center text-sm text-[#456478] pt-2">
               Não tem uma conta?{" "}
-              <Link href="/register" className="font-semibold text-[#0F555A] hover:text-[#263743] transition-colors">
+              <Link
+                href="/register"
+                className="font-semibold text-[#0F555A] hover:text-[#263743] transition-colors"
+              >
                 Cadastre-se
               </Link>
             </p>

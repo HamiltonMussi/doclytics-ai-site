@@ -41,10 +41,10 @@ export const FormInput = ({
           placeholder={placeholder}
           disabled={disabled}
           value={value}
-          className={`block w-full ${icon ? 'pl-10' : 'pl-4'} pr-4 py-3 border-2 rounded-xl focus:outline-none transition-colors text-[#263743] placeholder:text-[#88A0B0] ${
+          className={`block w-full ${icon ? "pl-10" : "pl-4"} pr-4 py-3 border-2 rounded-xl focus:outline-none transition-colors text-[#263743] placeholder:text-[#88A0B0] ${
             disabled
-              ? 'border-[#88A0B0]/30 bg-[#88A0B0]/10 text-[#88A0B0] cursor-not-allowed'
-              : 'border-[#88A0B0]/40 focus:border-[#0F555A]'
+              ? "border-[#88A0B0]/30 bg-[#88A0B0]/10 text-[#88A0B0] cursor-not-allowed"
+              : "border-[#88A0B0]/40 focus:border-[#0F555A]"
           }`}
         />
       </div>

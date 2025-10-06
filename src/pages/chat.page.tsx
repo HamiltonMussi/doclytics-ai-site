@@ -25,9 +25,14 @@ const ChatPage = () => {
   const { user, signOut } = useAuth();
   const router = useRouter();
   const { data: documents = [] } = useDocuments();
-  const [selectedDocumentId, setSelectedDocumentId] = useState<string | null>(null);
-  const selectedDocument = documents.find((doc) => doc.id === selectedDocumentId) || null;
-  const { data: interactions = [] } = useInteractions(selectedDocument?.id || null);
+  const [selectedDocumentId, setSelectedDocumentId] = useState<string | null>(
+    null,
+  );
+  const selectedDocument =
+    documents.find((doc) => doc.id === selectedDocumentId) || null;
+  const { data: interactions = [] } = useInteractions(
+    selectedDocument?.id || null,
+  );
   const uploadDocument = useUploadDocument();
   const deleteDocument = useDeleteDocument();
   const askQuestion = useAskQuestion(selectedDocument?.id || "");
@@ -37,7 +42,10 @@ const ChatPage = () => {
   const [showDocMenu, setShowDocMenu] = useState<string | null>(null);
   const [question, setQuestion] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState<{ isOpen: boolean; docId: string | null }>({
+  const [confirmDelete, setConfirmDelete] = useState<{
+    isOpen: boolean;
+    docId: string | null;
+  }>({
     isOpen: false,
     docId: null,
   });
@@ -47,12 +55,17 @@ const ChatPage = () => {
     selectedDocument?.ocrStatus === OcrStatus.PENDING ||
       selectedDocument?.ocrStatus === OcrStatus.PROCESSING
       ? selectedDocument.id
-      : null
+      : null,
   );
 
   const handleFileUpload = async (file: File) => {
     const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
-    const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+    const ALLOWED_TYPES = [
+      "image/jpeg",
+      "image/jpg",
+      "image/png",
+      "application/pdf",
+    ];
 
     if (file.size > MAX_FILE_SIZE) {
       toast.error("O arquivo deve ter no máximo 10MB");

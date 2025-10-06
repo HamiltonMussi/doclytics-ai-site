@@ -1,4 +1,8 @@
-import { PaperClipIcon, ArrowDownTrayIcon, TrashIcon } from "@heroicons/react/24/outline";
+import {
+  PaperClipIcon,
+  ArrowDownTrayIcon,
+  TrashIcon,
+} from "@heroicons/react/24/outline";
 import { OcrStatus } from "@/types/document";
 import { DocumentStatusIndicator } from "./DocumentStatusIndicator";
 
@@ -28,7 +32,9 @@ export const DocumentHeader = ({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
         <div className="flex items-center gap-3 min-w-0">
           <PaperClipIcon className="w-6 h-6 text-[#0F555A] flex-shrink-0" />
-          <h2 className="text-lg sm:text-xl font-bold text-[#263743] truncate">{fileName}</h2>
+          <h2 className="text-lg sm:text-xl font-bold text-[#263743] truncate">
+            {fileName}
+          </h2>
         </div>
         <div className="flex items-center justify-center gap-2 flex-shrink-0">
           <button

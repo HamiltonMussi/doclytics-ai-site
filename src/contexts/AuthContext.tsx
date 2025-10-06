@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 import { setCookie, parseCookies, destroyCookie } from "nookies";
 import { useRouter } from "next/router";
 import { api } from "@/services/api";
@@ -56,7 +62,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signUp = async (name: string, email: string, password: string) => {
-    const response = await api.post("/users/register", { name, email, password });
+    const response = await api.post("/users/register", {
+      name,
+      email,
+      password,
+    });
     const { access_token, user: userData } = response.data;
 
     setCookie(undefined, "doclytics.token", access_token, {
@@ -91,7 +101,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, isLoading, signIn, signUp, signOut, updateUser }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        isAuthenticated,
+        isLoading,
+        signIn,
+        signUp,
+        signOut,
+        updateUser,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

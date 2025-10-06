@@ -7,10 +7,17 @@ type AuthLayoutProps = {
   heroSubtitle?: ReactNode;
 };
 
-export const AuthLayout = ({ children, showHero = false, heroTitle, heroSubtitle }: AuthLayoutProps) => {
+export const AuthLayout = ({
+  children,
+  showHero = false,
+  heroTitle,
+  heroSubtitle,
+}: AuthLayoutProps) => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#EAFBFF] px-4 lg:px-0">
-      <div className={`w-full ${showHero ? 'max-w-6xl lg:grid lg:grid-cols-2 lg:gap-16 lg:items-center' : ''}`}>
+      <div
+        className={`w-full ${showHero ? "max-w-6xl lg:grid lg:grid-cols-2 lg:gap-16 lg:items-center" : ""}`}
+      >
         {children}
 
         {showHero && (

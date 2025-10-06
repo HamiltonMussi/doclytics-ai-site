@@ -6,11 +6,17 @@ type DropdownMenuProps = {
   className?: string;
 };
 
-export const DropdownMenu = ({ isOpen, children, className = "" }: DropdownMenuProps) => {
+export const DropdownMenu = ({
+  isOpen,
+  children,
+  className = "",
+}: DropdownMenuProps) => {
   if (!isOpen) return null;
 
   return (
-    <div className={`absolute bg-[#0F555A] rounded-xl shadow-2xl overflow-hidden z-10 border border-[#456478] ${className}`}>
+    <div
+      className={`absolute bg-[#0F555A] rounded-xl shadow-2xl overflow-hidden z-10 border border-[#456478] ${className}`}
+    >
       {children}
     </div>
   );
@@ -23,7 +29,12 @@ type DropdownMenuItemProps = {
   variant?: "default" | "danger";
 };
 
-export const DropdownMenuItem = ({ onClick, icon, children, variant = "default" }: DropdownMenuItemProps) => {
+export const DropdownMenuItem = ({
+  onClick,
+  icon,
+  children,
+  variant = "default",
+}: DropdownMenuItemProps) => {
   const textColor = variant === "danger" ? "text-red-400" : "text-white";
 
   return (

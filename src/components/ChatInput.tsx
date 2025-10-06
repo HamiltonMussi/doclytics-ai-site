@@ -9,7 +9,13 @@ type ChatInputProps = {
   ocrStatus: OcrStatus;
 };
 
-export const ChatInput = ({ value, onChange, onSubmit, isLoading, ocrStatus }: ChatInputProps) => {
+export const ChatInput = ({
+  value,
+  onChange,
+  onSubmit,
+  isLoading,
+  ocrStatus,
+}: ChatInputProps) => {
   const isDisabled = isLoading || ocrStatus !== OcrStatus.COMPLETED;
 
   return (

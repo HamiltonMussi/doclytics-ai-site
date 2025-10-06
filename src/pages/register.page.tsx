@@ -5,7 +5,11 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useState } from "react";
 import Link from "next/link";
 import Head from "next/head";
-import { EnvelopeIcon, LockClosedIcon, UserIcon } from "@heroicons/react/24/outline";
+import {
+  EnvelopeIcon,
+  LockClosedIcon,
+  UserIcon,
+} from "@heroicons/react/24/outline";
 import { AuthLayout } from "@/components/AuthLayout";
 import { AuthCard } from "@/components/AuthCard";
 import { AuthHeader } from "@/components/AuthHeader";
@@ -91,7 +95,10 @@ const Register = () => {
 
             <p className="text-center text-sm text-[#456478] pt-2">
               Já tem uma conta?{" "}
-              <Link href="/" className="font-semibold text-[#0F555A] hover:text-[#263743] transition-colors">
+              <Link
+                href="/"
+                className="font-semibold text-[#0F555A] hover:text-[#263743] transition-colors"
+              >
                 Faça login
               </Link>
             </p>

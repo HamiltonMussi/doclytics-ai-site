@@ -8,7 +8,7 @@ export const useAskQuestion = (documentId: string) => {
     async (question: string) => {
       const response = await api.post(
         `/documents/${documentId}/interactions/ask`,
-        { question }
+        { question },
       );
 
       return response.data;
@@ -17,6 +17,6 @@ export const useAskQuestion = (documentId: string) => {
       onSuccess: () => {
         queryClient.invalidateQueries(["interactions", documentId]);
       },
-    }
+    },
   );
 };

@@ -17,6 +17,6 @@ export const useUploadDocument = () => {
       onSuccess: () => {
         queryClient.invalidateQueries("documents");
       },
-    }
+    },
   );
 };
