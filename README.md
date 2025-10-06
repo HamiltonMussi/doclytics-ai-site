@@ -43,4 +43,4 @@ Open [http://localhost:3000](http://localhost:3000)
 
 ## Backend Required
 
-This frontend requires the Doclytics AI backend server running. See [doclytics-ai-server](../doclytics-ai-server) for setup instructions.
+This frontend requires the Doclytics AI backend server running. See [doclytics-ai-server](https://github.com/HamiltonMussi/doclytics-ai-server) for setup instructions.
