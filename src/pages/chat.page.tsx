@@ -147,7 +147,7 @@ const ChatPage = () => {
                       e.stopPropagation();
                       setShowDocMenu(showDocMenu === doc.id ? null : doc.id);
                     }}
-                    onBlur={() => setTimeout(() => setShowDocMenu(null), 50)}
+                    onBlur={() => setTimeout(() => setShowDocMenu(null), 150)}
                     className="opacity-0 group-hover:opacity-100 p-1.5 hover:bg-[#0F555A] rounded-lg transition-all"
                   >
                     <EllipsisVerticalIcon className="w-5 h-5 text-[#88A0B0]" />
@@ -155,7 +155,10 @@ const ChatPage = () => {
                   {showDocMenu === doc.id && (
                     <div className="absolute right-0 top-10 bg-[#0F555A] rounded-xl shadow-2xl overflow-hidden z-10 w-48 border border-[#456478]">
                       <button
-                        onClick={() => handleDeleteDocument(doc.id)}
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          handleDeleteDocument(doc.id);
+                        }}
                         className="w-full text-left px-4 py-3 text-sm hover:bg-[#456478] transition-colors text-red-400 flex items-center gap-2"
                       >
                         <TrashIcon className="w-4 h-4" />
@@ -172,7 +175,7 @@ const ChatPage = () => {
         <div className="relative p-4 border-t border-[#456478]">
           <button
             onClick={() => setShowUserMenu(!showUserMenu)}
-            onBlur={() => setTimeout(() => setShowUserMenu(false), 50)}
+            onBlur={() => setTimeout(() => setShowUserMenu(false), 150)}
             className="w-full text-left px-4 py-3 rounded-xl hover:bg-[#456478]/50 transition-colors flex items-center gap-3"
           >
             <UserCircleIcon className="w-6 h-6 text-[#88A0B0]" />
@@ -182,7 +185,8 @@ const ChatPage = () => {
           {showUserMenu && (
             <div className="absolute bottom-full left-4 right-4 mb-2 bg-[#0F555A] rounded-xl shadow-2xl overflow-hidden border border-[#456478]">
               <button
-                onClick={() => {
+                onMouseDown={(e) => {
+                  e.preventDefault();
                   setShowUserMenu(false);
                   router.push("/profile");
                 }}
@@ -192,7 +196,8 @@ const ChatPage = () => {
                 Editar perfil
               </button>
               <button
-                onClick={() => {
+                onMouseDown={(e) => {
+                  e.preventDefault();
                   setShowUserMenu(false);
                   signOut();
                 }}
