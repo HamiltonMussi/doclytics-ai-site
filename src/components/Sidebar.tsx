@@ -120,7 +120,7 @@ export const Sidebar = ({
                       e.stopPropagation();
                       setShowDocMenu(showDocMenu === doc.id ? null : doc.id);
                     }}
-                    onBlur={() => setTimeout(() => setShowDocMenu(null), 150)}
+                    onBlur={() => setTimeout(() => setShowDocMenu(null), 200)}
                     className="opacity-0 group-hover:opacity-100 p-1.5 hover:bg-[#0F555A] rounded-lg transition-all"
                   >
                     <EllipsisVerticalIcon className="w-5 h-5 text-[#88A0B0]" />
@@ -146,7 +146,7 @@ export const Sidebar = ({
         <div className="relative p-4 border-t border-[#456478] flex-shrink-0">
           <button
             onClick={() => setShowUserMenu(!showUserMenu)}
-            onBlur={() => setTimeout(() => setShowUserMenu(false), 150)}
+            onBlur={() => setTimeout(() => setShowUserMenu(false), 200)}
             className="w-full text-left px-4 py-3 rounded-xl hover:bg-[#456478]/50 transition-colors flex items-center gap-3"
           >
             <UserCircleIcon className="w-6 h-6 text-[#88A0B0]" />
