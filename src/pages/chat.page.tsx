@@ -6,6 +6,7 @@ import { useInteractions } from "@/hooks/useInteractions";
 import { useUploadDocument } from "@/hooks/useUploadDocument";
 import { useAskQuestion } from "@/hooks/useAskQuestion";
 import { useDocumentPolling } from "@/hooks/useDocumentPolling";
+import { useDeleteDocument } from "@/hooks/useDeleteDocument";
 import { OcrStatus } from "@/types/document";
 import { useRouter } from "next/router";
 
@@ -17,8 +18,10 @@ const ChatPage = () => {
   const selectedDocument = documents.find((doc) => doc.id === selectedDocumentId) || null;
   const { data: interactions = [] } = useInteractions(selectedDocument?.id || null);
   const uploadDocument = useUploadDocument();
+  const deleteDocument = useDeleteDocument();
   const askQuestion = useAskQuestion(selectedDocument?.id || "");
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showDocMenu, setShowDocMenu] = useState<string | null>(null);
   const [question, setQuestion] = useState("");
 
   useDocumentPolling(
@@ -45,6 +48,20 @@ const ChatPage = () => {
       setQuestion("");
     } catch (error: any) {
       alert(error.response?.data?.message || "Erro ao fazer pergunta");
+    }
+  };
+
+  const handleDeleteDocument = async (docId: string) => {
+    if (!confirm("Tem certeza que deseja apagar este documento?")) return;
+
+    try {
+      await deleteDocument.mutateAsync(docId);
+      if (selectedDocumentId === docId) {
+        setSelectedDocumentId(null);
+      }
+      setShowDocMenu(null);
+    } catch (error: any) {
+      alert(error.response?.data?.message || "Erro ao apagar documento");
     }
   };
 
@@ -77,17 +94,37 @@ const ChatPage = () => {
         <div className="flex-1 overflow-y-auto">
           <div className="p-2 space-y-1">
             {documents.map((doc) => (
-              <button
-                key={doc.id}
-                onClick={() => setSelectedDocumentId(doc.id)}
-                className={`w-full text-left px-3 py-2 rounded-lg text-sm truncate transition-colors ${
-                  selectedDocument?.id === doc.id
-                    ? "bg-gray-700"
-                    : "hover:bg-gray-800"
-                }`}
-              >
-                {doc.fileName}
-              </button>
+              <div key={doc.id} className="relative group">
+                <button
+                  onClick={() => setSelectedDocumentId(doc.id)}
+                  className={`w-full text-left px-3 py-2 rounded-lg text-sm truncate transition-colors ${
+                    selectedDocument?.id === doc.id
+                      ? "bg-gray-700"
+                      : "hover:bg-gray-800"
+                  }`}
+                >
+                  {doc.fileName}
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowDocMenu(showDocMenu === doc.id ? null : doc.id);
+                  }}
+                  className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 p-1 hover:bg-gray-600 rounded transition-opacity"
+                >
+                  ⋮
+                </button>
+                {showDocMenu === doc.id && (
+                  <div className="absolute right-2 top-10 bg-gray-800 rounded-lg shadow-lg overflow-hidden z-10 w-48">
+                    <button
+                      onClick={() => handleDeleteDocument(doc.id)}
+                      className="w-full text-left px-4 py-2 text-sm hover:bg-gray-700 transition-colors text-red-400"
+                    >
+                      Apagar
+                    </button>
+                  </div>
+                )}
+              </div>
             ))}
           </div>
         </div>
