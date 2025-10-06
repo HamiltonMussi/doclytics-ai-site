@@ -53,6 +53,19 @@ const ChatPage = () => {
   );
 
   const handleFileUpload = async (file: File) => {
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+    const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+
+    if (file.size > MAX_FILE_SIZE) {
+      alert("O arquivo deve ter no máximo 10MB");
+      return;
+    }
+
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      alert("Apenas arquivos JPG, PNG e PDF são permitidos");
+      return;
+    }
+
     try {
       const newDocument = await uploadDocument.mutateAsync(file);
       setSelectedDocumentId(newDocument.id);
